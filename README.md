@@ -1,22 +1,22 @@
 # 8x16
 
-
-
 ## Compiling the code
 
-Install VSCode
-Install the platformio extension
-Navigate to In the PlatformIO PIO Home -> Devices
-In the Embedded search for "Intel". 
-Find the "Intel MCS-51 (8051)" entry and click on it.
-In the "Intel MCS-51 (8051) page click Install, this project used version 2.1.0
+1. Install VSCode
+1. Install the platformio extension
+1. Navigate to In the PlatformIO PIO Home -> Devices
+1. In the Embedded search for "Intel". 
+1. Find the "Intel MCS-51 (8051)" entry and click on it.
+1. In the "Intel MCS-51 (8051) page click Install, this project used version 2.1.0
 
 ## Uploading the code
 
 TODO(mogo): Describe device connection
 TODO(mogo): Fix the hardcoded port
-Open platformio.ini, find the "upload_port" line and change it to match the serial device that is connected to the microcontroller.
-PlatformIO > STC15F2K60S2 > General > Build or Upload
+1. Open platformio.ini, find the "upload_port" line and change it to match the serial device that is connected to the microcontroller.
+1. PlatformIO > STC15F2K60S2 > General > Build or Upload
+
+## Original readme
 
 8x16 game based on STC15F2K60S2 - an Intel 8051 clone by STC.
 
