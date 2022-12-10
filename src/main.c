@@ -1,17 +1,23 @@
 #include "hw_driver.h"
 #include "stc15f2k60s2.h"
 #include "types.h"
+#include <stdio.h>       
+#include <stdlib.h>  
 
-void Die() {
+void Die(length) {
   while (1) {
     DelayMs(100);
     if (WasButtonPressed(kRstBtn) > 0) {
+      for(int i = length; i >= 1; --i) {
+        ClearPixel(snake[i][1], snake[i][0]);
+      }
       break;
     }
   }
 }
 
-int8 snake[5][2];
+int8 __xdata snake[128][2];
+int8 __xdata food[1][2];
 
 enum SnakeDirection {
   kRight = 0,
@@ -24,6 +30,8 @@ uint8 dir;
 
 void main(void) {
   int i;
+  int length = 4;   //length of snake
+  int check = 0; 
   InitHw();
 
 TEST:
@@ -38,22 +46,56 @@ TEST:
   snake[3][1] = 0;
   snake[4][0] = 0;
   snake[4][1] = 0;
-  dir = 0;  // right
+  food[1][0] = 5;     //created 2d array for multi-food compatablity
+  food[1][1] = 5;
+  dir = 0;  //set base direction to right
+
 
   // Draw the snake
   for (i = 0; i < 5; ++i) {
     SetPixel(/*row=*/snake[i][1], /*column=*/snake[i][0]);
   }
+  SetPixel(/*same as snake (x=1, y=0)*/ food[1][1], food[1][0]);
 
   while (1) {
     DelayMs(200);
-    ClearPixel(/*row=*/snake[4][1], /*column=*/snake[4][0]);
-    // Move the snake
-    for (i = 4; i >= 1; --i) {
+    
+    if(snake[length][1] == food[1][1] && snake[length][0] == food[1][0]) {     //check if the snake's head intersects with the "food" (singular pixel)
+      ++length;
+      while(1) {
+        bool check = 0;  
+        int tempFoodX = rand() % 8 + 1;     //randomly gen a x for the food
+        int tempFoodY = rand() % 16 + 1;    //randomly gen a y for the food
+        for(i = length; i >= 1; --i) {
+          if(snake[i][1] == tempFoodX || snake[i][0] == tempFoodY) {
+            check = 1;
+          }
+        }
+        if(check == 0) {
+          food[1][1] = tempFoodX;
+          food[1][0] = tempFoodY;
+        }
+      }
+      SetPixel(food[1][1], food[1][0]);
+    } else {
+          ClearPixel(/*row=*/snake[length][1], /*column=*/snake[length][0]); // Move the snake
+    }
+
+    ///////////////////////////////////////////
+    //find if snake colides with itself
+    /*
+    for(i = length; i >= 1; --i) {
+      if(snake[length])
+    }
+    */
+    ///////////////////////////////////////////
+
+    for (i = length; i >= 1; --i) {      //Move the snake 1 pixel forward
       snake[i][0] = snake[i - 1][0];
       snake[i][1] = snake[i - 1][1];
     }
-    if (WasButtonPressed(kRightBtn) > 0) {
+    /////////////////////////////////////////////
+    if (WasButtonPressed(kRightBtn) > 0) {      //change direction based on button press
       dir = kRight;
     } else if (WasButtonPressed(kDownBtn) > 0) {
       dir = kDown;
@@ -62,35 +104,34 @@ TEST:
     } else if (WasButtonPressed(kUpBtn) > 0) {
       dir = kUp;
     }
-
-    // Check for wall hit
-    switch (dir) {
+    //////////////////////////////////////////////
+    switch (dir) {        // Check for wall hit
       case 0:
         if (snake[0][0] == 7) {
-          Die();
+          Die(length);
           goto TEST;
         }
         break;
       case 1:
         if (snake[0][1] == 15) {
-          Die();
+          Die(length);
           goto TEST;
         }
         break;
       case 2:
         if (snake[0][0] == 0) {
-          Die();
+          Die(length);
           goto TEST;
         }
         break;
       case 3:
         if (snake[0][1] == 0) {
-          Die();
+          Die(length);
           goto TEST;
         }
         break;
     }
-
+    ////////////////////////////////////////////////
     // Move the head
     switch (dir) {
       case 0:
@@ -106,7 +147,13 @@ TEST:
         snake[0][1]--;
         break;
     }
+    /////////////////////////////////////////////////
+    if (WasButtonPressed(kRstBtn) > 0) {
+      goto TEST;
+    }
+    ///////////////////////////////////////////////////
     SetPixel(/*row=*/snake[0][1], /*column=*/snake[0][0]);
+    ////////////////////////////////////////////////
   }
 }
 
