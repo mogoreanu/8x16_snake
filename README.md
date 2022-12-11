@@ -3,20 +3,22 @@
 ## Compiling the code
 
 1. Install VSCode
-1. Install the platformio extension
-1. Navigate to In the PlatformIO PIO Home -> Devices
-1. In the Embedded search for "Intel". 
+1. Install the PlatformIO extension
+1. Navigate to the PlatformIO > Quick Access > PIO Home > Devices
+1. In the Platforms > Embedded search for "Intel". 
 1. Find the "Intel MCS-51 (8051)" entry and click on it.
 1. In the "Intel MCS-51 (8051) page click Install, this project used version 2.1.0
 
 ## Uploading the code
 
-TODO(mogo): Describe device connection
-TODO(mogo): Fix the hardcoded port
-1. Open platformio.ini, find the "upload_port" line and change it to match the serial device that is connected to the microcontroller.
-1. PlatformIO > STC15F2K60S2 > General > Build or Upload
+1. Connect to the MCU serial port (verified CP2102 and CH341A)
+2. MCU Gnd pin 20 - Serial Gnd
+3. MCU RX pin 21 - Serial Tx
+4. MCU Tx pin 22 - Serial RX
+5. Open platformio.ini, find the "upload_port" line and change it to match the serial device that is connected to the microcontroller.
+6. PlatformIO > STC15F2K60S2 > General > Build or Upload
 
-## Original readme
+## Description
 
 8x16 game based on STC15F2K60S2 - an Intel 8051 clone by STC.
 
@@ -25,21 +27,22 @@ The purpose of this project is to:
 1. Teach microcontroller programming on a cheap and starightforward platform
 
 Microcontroller details:
-STC15F2K60S2
-28I-PDIP40
-1845HVV065.XD
+`STC15F2K60S2`
+`28I-PDIP40 `
+`1845HVV065.XD`
 
 Microcontroller decoding:
-STC The program Flash in user program area can not be used as EEPROM., but there are special EEPROM
-15 STC 1T 8051 MCU, Speed is 8~12 times faster than the traditional 8051 in the same working frequency
-F : Operating Voltage 5.5V~4.2V
-2K SRAM: 2K = 2048 E\WHV
-60 Program space, e.g. 60:60KB
-S2? 2 UARTs (can be used simultaneously)' SPI' Internal EEPROM'  A/D Converter(PWM also can be used as DAC)'  CCP/PWM/PCA
-
-28 : Up to 28MHz
-I : Industrial, -40c-85c
-PDIP 40
+| Field   | Details |
+| ------- | ------  |
+| STC     | The program Flash in user program area can not be used as EEPROM, but there are special EEPROM    |
+| 15      | 15 STC 1T 8051 MCU, Speed is 8~12 times faster than the traditional 8051 in the same working frequency |
+| F       | Operating Voltage 5.5V~4.2V |
+| 2K      | SRAM: 2K = 2048 E\WHV |
+| 60      | Program space, e.g. 60:60KB |
+| S2      | 2 UARTs (can be used simultaneously)' SPI' Internal EEPROM'  A/D Converter(PWM also can be used as DAC)'  CCP/PWM/PCA |
+| 28      | Up to 28MHz |
+| I       | Industrial, -40c-85c |
+| PDIP 40 | Package |
 
 The MCU, according to "Chapter 3 Memory Organization and SFRs" has a total of 2048 bytes SRAM of RAM
 * 256 byte scratch-pad RAM (idata)
@@ -75,7 +78,7 @@ Unfortunatelly compilers that work with Intel 8051 are scarce and the official S
    The spec asks for a 47uF electrolytic and a 0.1uF ceramic capacitor at the power input of the MCU, need to add those.
 1. Reroute OK and Reset buttons to empty pins to free up UART0 for programming and debug output.
 
-Board layout
+MCU Board layout
 ```
  R4+  - P00       P45 - R1+
  R6+  - P01       P27 - R3+
@@ -95,8 +98,8 @@ Board layout
  C7-  - P17       P34 -
  R15+ - P54       P33 - BtnRight
  5v   - VCC       P32 - BtnUp
- Spkr - P55       P31 - BtnRst, UART0 TxD
- 0v   - GND       P30 - BtnOK,  UART0 RxD
+ Spkr - P55       P31 - BtnRst / UART0 TxD
+ 0v   - GND       P30 - BtnOK / UART0 RxD
 
  Rx - Row number x in the dot matrix display, X in [0, 15]. Rows are positive
  Cy - Column number y in the dot matrix display, Y in [0, 7]. Clumns are negative
