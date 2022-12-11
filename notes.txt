@@ -172,3 +172,8 @@ Figure out what's up with the ACC register and whether it can be used directly i
 Using IO port drive LED directly or matrix key scan, needs add a 470ohm to 1Kohm resistor to limit current, yeah ...
 
 Stopped at page 450
+
+
+Need to make the hw_driver a library, examples:
+https://community.platformio.org/t/how-can-i-create-a-repository-with-multiple-libraries-in-it-on-github-and-use-them-in-a-project/17745
+https://community.platformio.org/t/how-to-install-libraries-from-a-github-repos-subfolders/13458

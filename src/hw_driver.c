@@ -8,7 +8,6 @@
 int col = 0;
 // Marked as "xdata" to fit in memory, we can switch to a bit-per-pixel
 // mode that it may affect the interrupt performance.
-// uint8 d[ROW_COUNT][COL_COUNT];
 uint8 __xdata d[ROW_COUNT][COL_COUNT];
 
 uint16 tick;
@@ -149,10 +148,10 @@ void InitHw() {
 }
 
 void HandleButtonState(int8 btn, int8 is_pressed) {
-  if (is_pressed) {  // Down
+  if (is_pressed) {
 		// We want to make it so that the first event is issued right
 		// as soon as we find the button pressed, but if the button
-		// is held down the second even should come after a delay,
+		// is held down the second event should come after a delay,
 		// and the third and subsequent events need to be raised after
 		// a smaller delay.
 		if (btn_state[btn] == 0) {
@@ -175,14 +174,18 @@ void HandleButtonState(int8 btn, int8 is_pressed) {
 			++btn_state[btn];
 		}
   } else {
+    // Handle physical button bounce. Even if we see that the button
+    // is not  pressed it may be due to it going momentarily bouncing
+    // and the user intent is to keep the button held.
 		if (btn_state[btn] > 0) {
 			--btn_state[btn];
 		}
 	}
 }
 
-void Display() {
+int8 Display() {
   int8 i;
+  int8 result;
 	++tick;
 
   // Turn OFF whatever columns was ON.
@@ -200,11 +203,13 @@ void Display() {
   for (i = 0; i < ROW_COUNT; ++i) {
     if (d[i][col] == 1) {
       SetRowPin(i, 1);
+      ++result;
     }
   }
 	
   // Turn ON col.
   SetColPin(col, 0);	
+  return result;
 }
 
 void HandleButtons() {
@@ -312,7 +317,13 @@ void ClearScreen() {
 
 // Runs each time timer 0 interrupt is generated.
 void OnTick() {
-  Display();
+  int8 tmp;
+
+  tmp = Display();
+  // TODO(mogo): Make the column display timeout depend
+  // on the number of pixels. By modulating the duration we
+  // can control the perceived brightness.
+
   HandleButtons();
   ResetTimer0();
 }

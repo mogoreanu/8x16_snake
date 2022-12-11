@@ -60,6 +60,9 @@ USB Serial converters tested:
 
 # Development environment setup
 
+This section needs update, to explain how to set up with VSCode, PlatformIO and SDCC. Old text below.
+
+
 Unfortunatelly compilers that work with Intel 8051 are scarce and the official STC documentation recommends Keil uVision. The development environment will have to be 
 
 * Install Keil uVision C51, the version for 8051 microcontrollers. The version used in this project is V5.27.1.0. It will include the C compiler - C51 and the Intel 8051 assembly compiler A51.
@@ -73,7 +76,7 @@ Unfortunatelly compilers that work with Intel 8051 are scarce and the official S
 1. Reroute OK and Reset buttons to empty pins to free up UART0 for programming and debug output.
 
 Board layout
-
+```
  R4+  - P00       P45 - R1+
  R6+  - P01       P27 - R3+
  R7+  - P02       P26 - C1-
@@ -86,14 +89,14 @@ Board layout
  R14+ - P11       P44 - C2-
  R13+ - P12       P42 - C4-
  R10+ - P13       P41 - D2-
- R12+ - P14       P37 - Left
-      - P15       P36 - Down
+ R12+ - P14       P37 - BtnLeft
+      - P15       P36 - BtnDown
       - P16       P35 - C6-
  C7-  - P17       P34 -
- R15+ - P54       P33 - Right
- 5v   - VCC       P32 - Up
- Spkr - P55       P31 - Rst UART0 TxD
- 0v   - GND       P30 - OK  UART0 RxD
+ R15+ - P54       P33 - BtnRight
+ 5v   - VCC       P32 - BtnUp
+ Spkr - P55       P31 - BtnRst, UART0 TxD
+ 0v   - GND       P30 - BtnOK,  UART0 RxD
 
  Rx - Row number x in the dot matrix display, X in [0, 15]. Rows are positive
  Cy - Column number y in the dot matrix display, Y in [0, 7]. Clumns are negative
@@ -105,7 +108,8 @@ Board layout
               Col 4
      Col 2              Col 3
               Col 1
- 
+ ```
+
 # Links
 
 Stripped-down datasheet
