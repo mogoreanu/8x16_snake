@@ -49,6 +49,8 @@ void SetRowPin(int row, int v);
 // Columns are sinks, 1 - OFF, 0 - ON
 void SetColPin(int col, int v);
 
+void ClearScreen();
+
 void OnTick();
 
 #endif  // _MY_HW_DRIVER_

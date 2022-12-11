@@ -1,12 +1,11 @@
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "hw_driver.h"
 #include "stc15f2k60s2.h"
 #include "types.h"
 
-int8 __xdata snake[128][2];
-int8 __xdata food[2];
+int8_t __xdata snake[128][2];
+int8_t __xdata food[2];
 
 void Die(int length) {
   while (1) {
@@ -27,36 +26,40 @@ enum SnakeDirection {
   kUp = 3,
 };
 
-uint8 dir;
+uint8_t dir;
 
 void main(void) {
   int i;
   int check = 0;
+  uint8_t length;
   InitHw();
 
 TEST:
-  snake[0][0] = 4;
-  snake[0][1] = 0;
-  snake[1][0] = 3;
-  snake[1][1] = 0;
-  snake[2][0] = 2;
-  snake[2][1] = 0;
-  snake[3][0] = 1;
-  snake[3][1] = 0;
-  snake[4][0] = 0;
-  snake[4][1] = 0;
+
+  length = 5;
+
+  // Initialize the initial snake location.
+  for (i = 0; i < length; ++i) {
+    snake[i][0] = 0;
+    snake[i][1] = length - i - 1;
+  }
+
+  // Initialize the initial food location.
   food[0] = 5;
   food[1] = 5;
-  // Set initial direction to down
-  dir = 1;
-  int length = 5;
 
+  // Set initial direction to down
+  dir = kDown;
+
+  ClearScreen();
   // Draw the snake
   for (i = 0; i < length; ++i) {
     SetPixel(/*row=*/snake[i][1], /*column=*/snake[i][0]);
   }
-  // Display the food. Same as snake (x=1, y=0)
+
+  // Display the food.
   SetPixel(food[1], food[0]);
+
   while (1) {
     DelayMs(200);
     if (snake[0][1] == food[1] && snake[0][0] == food[0]) {
@@ -89,9 +92,8 @@ TEST:
       snake[i][1] = snake[i - 1][1];
     }
 
-    /////////////////////////////////////////////
-    if (WasButtonPressed(kRightBtn) >
-        0) {  // change direction based on button press
+    // Change the direction based on button press.
+    if (WasButtonPressed(kRightBtn) > 0) {
       dir = kRight;
     } else if (WasButtonPressed(kDownBtn) > 0) {
       dir = kDown;
@@ -100,8 +102,9 @@ TEST:
     } else if (WasButtonPressed(kUpBtn) > 0) {
       dir = kUp;
     }
-    ///////////////////////////////////////////
-    switch (dir) {  // Check for wall hit
+
+    // Check for wall hit
+    switch (dir) {
       case 0:
         if (snake[0][0] == 7) {
           snake[0][0] = -1;

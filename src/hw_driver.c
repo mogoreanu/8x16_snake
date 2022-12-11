@@ -127,11 +127,7 @@ void InitHw() {
   P36 = 1;  // Down
   P37 = 1;  // Left
 
-  for (i = 0; i < ROW_COUNT; ++i) {
-    for (j = 0; j < COL_COUNT; ++j) {
-      d[i][j] = 0;
-    }
-  }
+  ClearScreen();
 
 	tick = 0;
 	
@@ -302,6 +298,15 @@ void DelayMs(int ms) {
   while (ms > 1) {
     ms -= 1;
     Delay1ms();
+  }
+}
+
+void ClearScreen() {
+  int8 i, j;
+  for (i = 0; i < ROW_COUNT; ++i) {
+    for (j = 0; j < COL_COUNT; ++j) {
+      d[i][j] = 0;
+    }
   }
 }
 
